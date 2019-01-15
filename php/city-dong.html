@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<select id="but">
+			<option >天水</option>
+		</select>
+		省
+		<select id="but2">
+			<option>天水</option>
+		</select>
+		市
+		<input placeholder="jsdds" name="" id="" value="" />
+	</body>
+</html>
+<script src="js/ajaxtools.js" type="text/javascript" charset="utf-8"></script>
+
+
+<script type="text/javascript">
+	/*
+ *与后端交流四个信息（接口）
+ * 1、请求方式：get
+ * 2、请求地址，url：JSON/city.json
+ * 3、请求参数: 无
+ * 4、响应的数据格式：
+	* 
+ { "城市代码": [
+        {"省": "北京",
+            "市": [
+                {"市名": "北京",
+                    "编码": "101010100"
+                },
+                { "市名": "顺义",
+                    "编码": "101010400"
+                }
+            ]
+        },
+    ]
+}
+*/	
+	window.onload = function(){
+		 getData();
+		 $("but").onchange = function(){
+        	shoucity(this.value);   
+    	}
+	}
+	function getData(){
+		ajaxPhp({
+			"url":"json/city.json",
+			"func":function(str){
+				show(str);
+				shoucity($("but").value);
+			}
+		});
+	}
+	
+	let datas = null;
+	function show(str){
+		//将传的str值，进行编译，parse--将字符串转换成json格式；
+		let obj = JSON.parse(str);
+			datas = obj.城市代码;
+		let htmlstr = "";
+		for(let i in datas){
+			htmlstr += `<option value="${datas[i].省}">${datas[i].省}</option>`;
+		}
+		$("but").innerHTML = htmlstr;
+	}
+	
+	function shoucity(nn){
+		 //1、查找市的数组（根据省）
+		let citys;
+		for(let i in datas){
+			if (datas[i].省 == nn) {
+				citys = datas[i].市;
+				break;
+			}
+		}
+		let htmlstr = "";
+		for(let i in citys){
+			htmlstr += 	`<option value="${citys[i].编码}"> ${citys[i].市名} </option>`;
+			
+		}
+		$("but2").innerHTML = htmlstr;
+	}
+
+	function $(id){
+		return document.getElementById(id);
+	}
+
+</script>

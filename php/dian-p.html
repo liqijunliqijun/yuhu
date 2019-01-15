@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+	</head>
+	<body>
+		店名：<input type="text" id="querystr"  />
+		<input id="btnGet" type="button" value="搜索" />
+		<div id="box">
+			
+		</div>	
+	</body>
+</html>
+<script src="js/ajaxtools.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	function $(id){
+	return document.getElementById(id);
+}
+	
+
+window.onload = function(){
+	$("btnGet").onclick = function(){
+//		ajax("get","getData.php","querystr="+$("querystr").value,true,showData);
+		var sendStr = "querystr="+$("querystr").value;
+		ajaxPhp({
+			'url':"getData.php",
+			'param':sendStr,
+			"func":showData
+		})
+	}
+}	
+	
+function showData(str){
+	let objs = JSON.parse(str);
+	let htmlStr ="";
+	for(let i in objs){
+		// `....` 字符串模版，，里面的标签可以断行。
+		htmlStr += `<p><img src="${objs[i].img}" style="width:200px;height: 150px"/>
+					</p>
+					<p>店名：${objs[i].shopname}</p>
+					<p>地址：${objs[i].address}</p>
+					<p>联系电话：${objs[i].phone}</p>
+					<hr/>`;
+		}
+	$('box').innerHTML = htmlStr;	
+}
+
+
+
+
+</script>
